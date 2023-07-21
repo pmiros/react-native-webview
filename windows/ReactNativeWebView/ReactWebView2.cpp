@@ -192,6 +192,11 @@ namespace winrt::ReactNativeWebView::implementation {
     }
 
     void ReactWebView2::OnCoreWebView2Initialized(winrt::Microsoft::UI::Xaml::Controls::WebView2 const& sender, winrt::Microsoft::UI::Xaml::Controls::CoreWebView2InitializedEventArgs const& /* args */) {
+        //a workaround for race condition redering bug found in MS Webview2 SDK
+        //https://github.com/MicrosoftEdge/WebView2Feedback/issues/898
+        std::chrono::milliseconds timespan(500);
+        std::this_thread::sleep_for(timespan);
+        
         assert(sender.CoreWebView2());
 
         if (m_navigateToHtml != L"") {
